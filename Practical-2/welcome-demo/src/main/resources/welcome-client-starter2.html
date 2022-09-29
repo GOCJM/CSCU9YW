@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Simple Client for the Welcome Service</title>
+  </head>
+  <body>
+    <div>
+      <!-- guest name input field -->
+      <input type="text" id="name" placeholder="guest name"/>
+      <!-- language selection element -->
+      <select id="lang">
+        <option selected disabled>Please select a language:</option>
+        <option value="en">English</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+      </select>
+      <!-- ding button -->
+      <button type="button" onclick="ding_request();">ding</button>
+    </div>
+
+    <!-- HTML element to display the ding response -->
+    <div id="ding_response">
+    </div>
+
+    <script>
+      // JS function sending ding request to server and handling response
+      function ding_request() {
+        // identify HTML element for displaying reponse
+        const ding_response = document.getElementById('ding_response');
+
+        const language = document.getElementById('lang').value;
+        const name = document.getElementById('name').value
+
+        const request = `/${language}?name=${name}`
+
+        // send GET request
+        fetch(`http://localhost:8080/ding${request}`).
+          // receive response and parse JSON representation into a JS data structure
+          then(response => response.json()).
+          // display the returned data as string - if there were no network or parsing errors
+          then(data => ding_response.innerText = data.message ? data.message : data.msg).
+          // otherwise display an error message
+          catch(error => ding_response.innerHTML = error);
+      }
+    </script>
+  </body>
+</html>
