@@ -4,33 +4,35 @@
 
 package welcome.model;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Welcome {
 
-    private HashMap<String,String> languages;
-
     private String lang;
     private String msg;
 
-    private String ERROR_UNKNOWN_LANGUAGE = "Sorry, I do not speak your language";
-
     public Welcome(String lang, String name) {
-        languages = new HashMap<>();
+        handleParameters(lang,name);
+    }
 
-        languages.putAll(Map.of(
-                "en","Welcome",
-                "fr","Bienvenue",
-                "de","Willkommen")
-        );
+    private void handleParameters(String lang, String name) {
+        HashMap<String, String> languages = new HashMap<>(Map.of(
+                "en", "Welcome",
+                "fr", "Bienvenue",
+                "de", "Willkommen"));
 
         boolean isNameValid = name != null && !name.trim().isEmpty();
 
-        // Default to English if language is unknown
+        // Default to English if language is unknown and throw error
         if (!languages.containsKey(lang)) {
             this.lang = "en";
-            this.msg = isNameValid ? String.format("%s, %s!",ERROR_UNKNOWN_LANGUAGE,name) : ERROR_UNKNOWN_LANGUAGE;
+            String ERROR_UNKNOWN_LANGUAGE = "Sorry, I do not speak your language";
+            this.msg = isNameValid ? String.format("%s, %s!", ERROR_UNKNOWN_LANGUAGE,name) : ERROR_UNKNOWN_LANGUAGE;
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,String.format("Error: '%s' is not supported.\n%s",lang,this.msg));
         } else {
             this.lang = lang;
             String greeting = languages.get(lang);
