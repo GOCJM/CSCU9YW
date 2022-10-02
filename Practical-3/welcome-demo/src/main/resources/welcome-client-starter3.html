@@ -39,6 +39,15 @@
           then(data => output.innerHTML = JSON.stringify(data)).
           catch(error => output.innerHTML = error);
       }
+
+      function read_all_request() {
+        const output = document.getElementById('output');
+        let url = 'http://localhost:8080/ding/'
+        fetch(url).
+        then(response => response.json()).
+        then(data => output.innerHTML = JSON.stringify(data)).
+        catch(error => output.innerHTML = error);
+      }
     </script>
   </body>
 </html>
