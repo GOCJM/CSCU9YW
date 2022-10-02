@@ -3,9 +3,7 @@
 
 package welcome.service;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import org.springframework.stereotype.Component;
 
@@ -50,7 +48,7 @@ public class WelcomeServiceImpl implements WelcomeService {
 
     // Not yet implemented.
     public List<Welcome> getAllWelcomes() {
-        throw new UnsupportedOperationException();
+        return new ArrayList<>(db.values());
     }
 
     // Not yet implemented.

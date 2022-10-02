@@ -15,9 +15,13 @@ import org.springframework.http.HttpStatus;
 import welcome.model.*;
 import welcome.service.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin
 public class WelcomeController {
+
+    private final String ROOT_PATH = "/ding";
 
     // The WelcomeController depends on the WelcomeService, so it needs to keep a reference to it.
     private WelcomeService ws;
@@ -32,7 +36,12 @@ public class WelcomeController {
         this.ws = ws;
     }
 
-    @GetMapping("/ding/{lang}")
+    @GetMapping(ROOT_PATH)
+    public List<Welcome> getAllWelcomes() {
+        return ws.getAllWelcomes();
+    }
+
+    @GetMapping(ROOT_PATH + "/{lang}")
     public Welcome getWelcome(@PathVariable String lang, @RequestParam(required=false) String name) {
         Welcome welcome = ws.getWelcome(lang, name);
         if (welcome == null) {
