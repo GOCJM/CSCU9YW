@@ -13,6 +13,7 @@ import welcome.model.*;
 import welcome.service.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin
@@ -55,5 +56,18 @@ public class WelcomeController {
         }
         return welcome;
     }
+
+    @PutMapping(ROOT_PATH + "/{lang}")
+    public ResponseEntity<Void> updateWelcome(@RequestBody Welcome newWelcome, @PathVariable String lang) {
+        if (!ws.hasWelcome(lang)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        if (!Objects.equals(lang, newWelcome.getLang())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        ws.addWelcome(newWelcome);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
 
 }
