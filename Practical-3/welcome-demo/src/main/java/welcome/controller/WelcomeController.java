@@ -4,6 +4,7 @@
 
 package welcome.controller;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -44,8 +45,12 @@ public class WelcomeController {
         if (ws.hasWelcome(newWelcome.getLang())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+
         ws.addWelcome(newWelcome);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Location",ROOT_PATH + "/" + newWelcome.getLang());
+
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     @GetMapping(ROOT_PATH + "/{lang}")
