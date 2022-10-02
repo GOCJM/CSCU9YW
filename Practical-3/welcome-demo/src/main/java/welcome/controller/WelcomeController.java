@@ -4,11 +4,8 @@
 
 package welcome.controller;
 
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 
@@ -39,6 +36,16 @@ public class WelcomeController {
     @GetMapping(ROOT_PATH)
     public List<Welcome> getAllWelcomes() {
         return ws.getAllWelcomes();
+    }
+
+    @PostMapping(ROOT_PATH)
+    public ResponseEntity<Void> addWelcome(@RequestBody Welcome newWelcome) {
+        Welcome welcomeSearch = ws.getWelcome(newWelcome.getLang());
+        if (welcomeSearch != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        ws.addWelcome(newWelcome);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping(ROOT_PATH + "/{lang}")
