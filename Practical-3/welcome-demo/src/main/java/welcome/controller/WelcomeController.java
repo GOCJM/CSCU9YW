@@ -69,5 +69,13 @@ public class WelcomeController {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
+    @DeleteMapping(ROOT_PATH + "/{lang}")
+    public ResponseEntity<Void> removeWelcome(@PathVariable String lang) {
+        if (!ws.hasWelcome(lang)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        ws.removeWelcome(lang);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

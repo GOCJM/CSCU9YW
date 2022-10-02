@@ -46,14 +46,14 @@ public class WelcomeServiceImpl implements WelcomeService {
         return welcome;
     }
 
-    // Not yet implemented.
     public List<Welcome> getAllWelcomes() {
         return new ArrayList<>(db.values());
     }
 
-    // Not yet implemented.
     public void removeWelcome(String lang) {
-        throw new UnsupportedOperationException();
+        if (lang != null) {
+            db.remove(lang);
+        }
     }
 
 }
