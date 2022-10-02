@@ -40,8 +40,7 @@ public class WelcomeController {
 
     @PostMapping(ROOT_PATH)
     public ResponseEntity<Void> addWelcome(@RequestBody Welcome newWelcome) {
-        Welcome welcomeSearch = ws.getWelcome(newWelcome.getLang());
-        if (welcomeSearch != null) {
+        if (ws.hasWelcome(newWelcome.getLang())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         ws.addWelcome(newWelcome);
