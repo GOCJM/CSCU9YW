@@ -39,6 +39,8 @@
 
     function populateOptions(options) {
         const select = document.getElementById('guest_lang');
+        // Reset options
+        select.innerHTML = "";
         JSON.parse(options).forEach(d=> select.add(new Option(d.lang,d.lang)));
     }
 

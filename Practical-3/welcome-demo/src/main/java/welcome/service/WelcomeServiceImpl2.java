@@ -3,14 +3,16 @@
 
 package welcome.service;
 
-import java.util.*;
-
 import org.springframework.stereotype.Component;
+import welcome.model.Welcome;
 
-import welcome.model.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-//@Component
-public class WelcomeServiceImpl implements WelcomeService {
+@Component
+public class WelcomeServiceImpl2 implements WelcomeService {
 
     // Very simple in-memory database; key is the lang field of class Welcome.
     // We have to be careful with this 'database'. In order to avoid objects
@@ -18,7 +20,7 @@ public class WelcomeServiceImpl implements WelcomeService {
     // before insertion and retrieval.
     private Map<String, Welcome> db;
 
-    public WelcomeServiceImpl() {
+    public WelcomeServiceImpl2() {
         db = new HashMap<>();
     }
 
