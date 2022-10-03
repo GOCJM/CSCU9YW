@@ -2,8 +2,13 @@
 
 package welcome.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Welcome {
 
+    @Id
     private String lang;
     private String msg;
 
