@@ -3,13 +3,12 @@
 
 package welcome.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import welcome.model.Welcome;
+import welcome.repository.WelcomeRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class WelcomeServiceImpl2 implements WelcomeService {
@@ -18,30 +17,27 @@ public class WelcomeServiceImpl2 implements WelcomeService {
     // We have to be careful with this 'database'. In order to avoid objects
     // in the database being mutated accidentally, we must always copy objects
     // before insertion and retrieval.
-    private Map<String, Welcome> db;
+    @Autowired
+    private WelcomeRepository db;
 
-    public WelcomeServiceImpl2() {
-        db = new HashMap<>();
+    public WelcomeServiceImpl2(WelcomeRepository repository) {
+        db = repository;
     }
 
     // Adds a welcome to the database, or overwrites an existing one.
     public void addWelcome(Welcome welcome) {
         if (welcome != null && welcome.getLang() != null) {
-            // copying welcome to isolate objects in the database from changes
-            welcome = new Welcome(welcome);
-            db.put(welcome.getLang(), welcome);
+            db.save(welcome);
         }
     }
 
     // Returns a welcome in language lang, personalised to name.
     // Parameter lang must not be null, but name may be null.
     public Welcome getWelcome(String lang, String name) {
-        Welcome welcome = db.get(lang);
+        Welcome welcome = db.getWelcomeByLang(lang);
         if (welcome == null) {
             return null;
         }
-        // copying welcome to protect objects in the database from changes
-        welcome = new Welcome(welcome);
         if (name != null) {
             welcome.setMsg(welcome.getMsg() + ", " + name);
         }
@@ -49,12 +45,12 @@ public class WelcomeServiceImpl2 implements WelcomeService {
     }
 
     public List<Welcome> getAllWelcomes() {
-        return new ArrayList<>(db.values());
+        return new ArrayList<>((Collection) db.findAll());
     }
 
     public void removeWelcome(String lang) {
         if (lang != null) {
-            db.remove(lang);
+            db.deleteById(lang);
         }
     }
 
