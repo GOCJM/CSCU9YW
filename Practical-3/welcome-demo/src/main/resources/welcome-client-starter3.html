@@ -37,6 +37,11 @@
         fetch(url).then(response => response.json()).then(data => output.innerHTML = JSON.stringify(data)).catch(error => output.innerHTML = error);
     }
 
+    function populateOptions(options) {
+        const select = document.getElementById('guest_lang');
+        JSON.parse(options).forEach(d=> select.add(new Option(d.lang,d.lang)));
+    }
+
     function dataBody(data) {
         return data ? JSON.parse(JSON.stringify(data)) : '';
     }
@@ -58,7 +63,7 @@
             body: JSON.stringify(data),
         }).then(async (response) => {
           let data = await response.text();
-          output.innerText = `${response.status}\n${dataBody(data)}`
+          output.innerText = `${response.status}\n${dataBody(data)}`;
         }).catch(error => output.innerHTML = error);
     }
 
@@ -79,7 +84,7 @@
             body: JSON.stringify(data),
         }).then(async (response) => {
           let data = await response.text();
-          output.innerText = `${response.status}\n${dataBody(data)}`
+          output.innerText = `${response.status}\n${dataBody(data)}`;
         }).catch(error => output.innerHTML = error);
     }
 
@@ -92,7 +97,7 @@
             method: 'DELETE',
         }).then(async (response) => {
           let data = await response.text();
-          output.innerText = `${response.status}\n${dataBody(data)}`
+          output.innerText = `${response.status}\n${dataBody(data)}`;
         }).catch(error => output.innerHTML = error);
     }
 
@@ -101,7 +106,8 @@
         let url = 'http://localhost:8080/ding/'
         fetch(url).then(async (response) => {
           let data = await response.text();
-          output.innerText = `${response.status}\n${dataBody(data)}`
+          output.innerText = `${response.status}\n${dataBody(data)}`;
+          populateOptions(data);
         }).catch(error => output.innerHTML = error);
     }
 </script>
