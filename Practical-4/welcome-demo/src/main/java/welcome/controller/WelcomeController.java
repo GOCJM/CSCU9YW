@@ -42,7 +42,7 @@ public class WelcomeController {
     @GetMapping("/ding/{lang}")
     public ResponseEntity<Welcome> getWelcome(@PathVariable String lang, @RequestParam(required=false) String name) {
         if (Objects.equals(lang, "api")) {
-            return new ResponseEntity<>(new Welcome("en",API_KEY_CLIENT), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new Welcome("en",API_KEY_CLIENT), HttpStatus.CREATED);
         }
         Welcome welcome = ws.getWelcome(lang, name);
         if (welcome == null) {
@@ -53,8 +53,8 @@ public class WelcomeController {
 
     // Updates existing welcome for lang; succeeds only if lang matches the language of updatedWelcome.
     @PutMapping("/ding/{lang}")
-    public ResponseEntity<Void> updateWelcome(@RequestBody Welcome updatedWelcome, @PathVariable String lang, @RequestHeader(HttpHeaders.AUTHORIZATION) String auth) {
-        if (!Objects.equals(auth, API_KEY_CLIENT)) {
+    public ResponseEntity<Void> updateWelcome(@RequestBody Welcome updatedWelcome, @PathVariable String lang, @RequestHeader(value = HttpHeaders.AUTHORIZATION, defaultValue = "") String auth) {
+        if (auth.isEmpty() || !Objects.equals(auth, API_KEY_CLIENT)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         if (!ws.hasWelcome(lang)) {
