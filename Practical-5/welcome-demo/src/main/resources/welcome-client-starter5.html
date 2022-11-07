@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Simple HATEOAS Client for the Welcome Service</title>
+  </head>
+  <body>
+    <div id="welcomes">
+      <button type="button" onclick="welcomes_request();">all welcomes</button>
+    </div>
+    <div id="ding">
+      <input type="text" id="guest_name" placeholder="guest name"/>
+      <select id="guest_lang">
+        <option value="en">en</option>
+      </select>
+      <button type="button" onclick="ding_request();">ding</button>
+    </div>
+    <hr/>
+    <pre id="output">
+    </pre>
+
+    <script>
+      function ding_request() {
+        const output = document.getElementById('output');
+        const name_val = document.getElementById('guest_name').value;
+        const lang_val = document.getElementById('guest_lang').value;
+        // construct URI from selected language and guest name
+        let url = 'http://localhost:8080/ding/' + lang_val;
+        if (name_val != '') {
+          url += '?name=' + name_val;
+        }
+        // send request and display response
+        fetch(url).
+          then(response => response.json()).
+          then(data => output.innerHTML = JSON.stringify(data, null, 4)).
+          catch(error => output.innerHTML = error);
+      }
+
+      function welcomes_request() {
+        const output = document.getElementById('output');
+        const url = 'http://localhost:8080/ding';
+        // send request and display and process response
+        fetch(url).
+          then(response => response.json()).
+          then(data => {
+            output.innerHTML = JSON.stringify(data, null, 4);
+            // populate selection with languages from array data;
+            //   this code works with the starter service
+            //   but will break once resources are embbedded.
+            const sel = document.getElementById('guest_lang');
+            sel.innerHTML = '';
+            for (welcome of data) {
+              // create an option for welcome.lang and append to the select
+              const opt = document.createElement('option');
+              opt.value = welcome.lang;
+              opt.innerHTML = welcome.lang;
+              sel.appendChild(opt);
+            }
+          }).
+          catch(error => output.innerHTML = error);
+      }
+    </script>
+  </body>
+</html>
