@@ -7,7 +7,9 @@ package welcome.controller;
 
 import java.util.List;
 
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,8 +55,18 @@ public class WelcomeController {
     }
 
     @GetMapping("/ding")
-    public ResponseEntity<List<Welcome>> getAllWelcomes() {
-        return new ResponseEntity(ws.getAllWelcomes(), HttpStatus.OK);
+    public CollectionModel<Welcome> getAllWelcomes() {
+        List<Welcome> allWelcomes = ws.getAllWelcomes();
+
+        for (Welcome welcome : allWelcomes) {
+            Link selfLink = linkTo(methodOn(WelcomeController.class).getWelcome(welcome.getLang(), null)).withSelfRel();
+            Link welcomes = linkTo(methodOn(WelcomeController.class).getAllWelcomes()).withRel("welcomes");
+            welcome.add(selfLink,welcomes);
+        }
+
+        return CollectionModel.of(
+                allWelcomes,
+                linkTo(methodOn(WelcomeController.class).getAllWelcomes()).withSelfRel());
     }
 
 }

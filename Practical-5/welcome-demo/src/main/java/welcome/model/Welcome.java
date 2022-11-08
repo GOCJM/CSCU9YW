@@ -2,7 +2,9 @@
 
 package welcome.model;
 
-public class Welcome {
+import org.springframework.hateoas.RepresentationModel;
+
+public class Welcome extends RepresentationModel<Welcome> {
 
     private String lang;
     private String msg;
