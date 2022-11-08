@@ -7,6 +7,7 @@ package welcome.controller;
 
 import java.util.List;
 
+import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,12 +20,15 @@ import org.springframework.http.ResponseEntity;
 import welcome.model.*;
 import welcome.service.*;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @CrossOrigin
 public class WelcomeController {
 
     // The WelcomeController depends on the WelcomeService, so it needs to keep a reference to it.
-    private WelcomeService ws;
+    private final WelcomeService ws;
 
     // The fact that the constructor for the WelcomeController requires a
     // WelcomService argument tells Spring to auto-configure a WelcomeService
@@ -37,12 +41,15 @@ public class WelcomeController {
     }
 
     @GetMapping("/ding/{lang}")
-    public ResponseEntity<Welcome> getWelcome(@PathVariable String lang, @RequestParam(required=false) String name) {
+    public EntityModel<Welcome> getWelcome(@PathVariable String lang, @RequestParam(required=false) String name) {
         Welcome welcome = ws.getWelcome(lang, name);
         if (welcome == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity(welcome, HttpStatus.OK);
+        return EntityModel.of(welcome,
+                linkTo(methodOn(WelcomeController.class).getWelcome(lang, name)).withSelfRel(),
+                linkTo(methodOn(WelcomeController.class).getAllWelcomes()).withRel("welcomes")
+        );
     }
 
     @GetMapping("/ding")
