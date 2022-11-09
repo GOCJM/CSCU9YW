@@ -20,6 +20,15 @@
     </pre>
 
     <script>
+      function hideElement(elementName) {
+        document.getElementById(elementName).style.display = "none";
+      }
+      function showElement(elementName) {
+        document.getElementById(elementName).style.display = "flex";
+      }
+      // Hide element initially.
+      hideElement("ding")
+
       function ding_request() {
         const output = document.getElementById('output');
         const name_val = document.getElementById('guest_name').value;
@@ -37,6 +46,8 @@
       }
 
       function welcomes_request() {
+        // Show element with the loaded URIs.
+        showElement("ding")
         const output = document.getElementById('output');
         const url = 'http://localhost:8080/ding';
         // send request and display and process response
