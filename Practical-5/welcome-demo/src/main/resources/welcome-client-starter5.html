@@ -25,7 +25,7 @@
         const name_val = document.getElementById('guest_name').value;
         const lang_val = document.getElementById('guest_lang').value;
         // construct URI from selected language and guest name
-        let url = 'http://localhost:8080/ding/' + lang_val;
+        let url = lang_val;
         if (name_val != '') {
           url += '?name=' + name_val;
         }
@@ -49,11 +49,13 @@
             //   but will break once resources are embbedded.
             const sel = document.getElementById('guest_lang');
             sel.innerHTML = '';
-            for (welcome of data) {
+            const languageList = data._embedded.welcomeList;
+            for (welcome of languageList) {
               // create an option for welcome.lang and append to the select
               const opt = document.createElement('option');
-              opt.value = welcome.lang;
+              opt.value = `${url}/${welcome.lang}`;
               opt.innerHTML = welcome.lang;
+              // opt.innerHTML = `${url}/${welcome.lang}`;
               sel.appendChild(opt);
             }
           }).
