@@ -64,9 +64,9 @@
             for (welcome of languageList) {
               // create an option for welcome.lang and append to the select
               const opt = document.createElement('option');
-              opt.value = `${url}/${welcome.lang}`;
+              const welcomeSelf = welcome._links.self;
+              opt.value = welcomeSelf.templated ? welcomeSelf.href.split('{')[0] : welcomeSelf.href;
               opt.innerHTML = welcome.lang;
-              // opt.innerHTML = `${url}/${welcome.lang}`;
               sel.appendChild(opt);
             }
           }).

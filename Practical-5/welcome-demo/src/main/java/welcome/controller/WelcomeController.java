@@ -42,7 +42,7 @@ public class WelcomeController {
         this.ws = ws;
     }
 
-    @GetMapping("/ding/{lang}")
+    @GetMapping("/welcome/{lang}")
     public EntityModel<Welcome> getWelcome(@PathVariable String lang, @RequestParam(required=false) String name) {
         Welcome welcome = ws.getWelcome(lang, name);
         if (welcome == null) {
